@@ -8,15 +8,33 @@ app.use(cors());
 
 // First Page APIs
 app.get("/viewersApi", (req, res) => {
-  res.end("55.22M");
+  const arr = [
+    {
+      "yesterday" : "355.4 M",
+      "today" : "563.87 M"
+    }
+  ];
+  res.end(JSON.stringify(arr));
 });
 
 app.get("/watchTimeApi", (req, res) => {
-  res.end("115.2 Min");
+  const arr = [
+    {
+      "yesterday" : "355.4 Min",
+      "today" : "263.67 Min"
+    }
+  ];
+  res.end(JSON.stringify(arr));
 });
 
 app.get("/adApi", (req, res) => {
-  res.end("355.55 M");
+  const arr = [
+    {
+      "yesterday" : "305.44 M",
+      "today" : "260.39 M"
+    }
+  ];
+  res.end(JSON.stringify(arr));
 });
 
 // Second Page APIs
@@ -42,7 +60,7 @@ app.get("/ottAdApi", (req, res) => {
 
 
 
-// Yesterday Today APIs
+// dayWiseApi APIs
 app.get("/dayWiseApi", (req, res) => {
   const arr = [
     {
@@ -52,8 +70,6 @@ app.get("/dayWiseApi", (req, res) => {
   ];
   res.end(JSON.stringify(arr));
 });
-
-
 
 
 app.get("/ottGraphApi", (req, res) => {
