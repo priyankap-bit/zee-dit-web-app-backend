@@ -43,11 +43,14 @@ app.get("/ottAdApi", (req, res) => {
 
 
 // Yesterday Today APIs
-app.get("/yesterday Api", (req, res) => {
-  res.end("654.22M");
-});
-app.get("/todayApi", (req, res) => {
-  res.end("300.52M");
+app.get("/dayWiseApi", (req, res) => {
+  const arr = [
+    {
+      "yesterday" : "655.24",
+      "today" : "163.87"
+    }
+  ];
+  res.end(JSON.stringify(arr));
 });
 
 
