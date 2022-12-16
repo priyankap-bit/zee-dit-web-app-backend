@@ -38,7 +38,7 @@ app.get('/ottWatchTimeApi', (req, res) => {
   res.end('143.45 Min');
 });
 
-app.get('/adTimeApi', (req, res) => {
+app.get('/ottAdApi', (req, res) => {
   res.end('3245.12 Min');
 });
 
