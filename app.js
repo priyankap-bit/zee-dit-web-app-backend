@@ -3,6 +3,9 @@ const app = express()
 const port = 5000
 var mysql = require('mysql')
 const reader = require('xlsx')
+const cors = require('cors')
+app.use(cors())
+
 
 // First Page APIs
 app.get('/viewersApi', (req, res) => {
@@ -43,7 +46,7 @@ app.get('/adTimeApi', (req, res) => {
 app.get('/csvApi', (req, res) => {
   // Reading our test file
   const file = reader.readFile('test.csv')
-      
+
   let data = []
     
   const sheets = file.SheetNames
