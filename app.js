@@ -43,8 +43,7 @@ app.get('/adTimeApi', (req, res) => {
 app.get('/csvApi', (req, res) => {
   // Reading our test file
   const file = reader.readFile('test.csv')
-
-    
+      
   let data = []
     
   const sheets = file.SheetNames
@@ -58,25 +57,16 @@ app.get('/csvApi', (req, res) => {
     })
   }
   
-  
-// Printing data
-console.log(data)
-
       var scoreHome = 0;
-      result.forEach(element => {
+      data.forEach(element => {
           // console.log(element.score);
           scoreHome = scoreHome + element.score;
       });
       var l = JSON.stringify(scoreHome)  
-      console.log('sum is:', scoreHome)
-      res.end(JSON.stringify(scoreHome));
+      console.log('sum issss:', scoreHome)
+      res.end(JSON.stringify(scoreHome))
 
 
-
-
-  // console.log('file is:', file)
-
-  // res.end(JSON.stringify(file));
 });
 
 
