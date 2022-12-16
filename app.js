@@ -31,7 +31,7 @@ app.get('/linearWatchTimeApi', (req, res) => {
 
 
 app.get('/ottViewersApi', (req, res) => {
-  res.end('65.22 Min');
+  res.end('65.22 M');
 });
 
 app.get('/ottWatchTimeApi', (req, res) => {
@@ -39,7 +39,12 @@ app.get('/ottWatchTimeApi', (req, res) => {
 });
 
 app.get('/ottAdApi', (req, res) => {
-  res.end('3245.12 Min');
+  res.end('3245.12 M');
+});
+
+app.get('/ottGraphApi', (req, res) => {
+  
+  res.end('3245.12 M');
 });
 
 
