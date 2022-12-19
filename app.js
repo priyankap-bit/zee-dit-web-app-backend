@@ -51,7 +51,15 @@ app.get("/linearReachApi", (req, res) => {
 });
 
 app.get("/linearWatchTimeApi", (req, res) => {
-  res.end("543.23 Min");
+  const arr = [
+    {
+      "title" : "Watch Time",
+      "time" : "155.23 Min",
+      "different" : "-36.5%",
+      "prev" : "5.33K"
+    }
+  ];
+  res.end(JSON.stringify(arr));
 });
 
 app.get("/ottViewersApi", (req, res) => {
@@ -67,7 +75,15 @@ app.get("/ottViewersApi", (req, res) => {
 });
 
 app.get("/ottWatchTimeApi", (req, res) => {
-  res.end("143.45 Min");
+  const arr = [
+    {
+      "title" : "Watch Time",
+      "time" : "254.23 Min",
+      "different" : "-36.5%",
+      "prev" : "5.33K"
+    }
+  ];
+  res.end(JSON.stringify(arr));
 });
 
 app.get("/ottAdApi", (req, res) => {
