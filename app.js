@@ -86,10 +86,6 @@ app.get("/ottWatchTimeApi", (req, res) => {
   res.end(JSON.stringify(arr));
 });
 
-app.get("/ottAdApi", (req, res) => {
-  res.end("3245.12 M");
-});
-
 app.get("/executiveupdateapi", (req, res) => {
   const arr = [
     {
@@ -99,6 +95,37 @@ app.get("/executiveupdateapi", (req, res) => {
   ];
   res.end(JSON.stringify(arr));
 });
+
+
+// Third page APIs
+app.get("/sociallisteningapi", (req, res) => {
+
+  const arr = [
+    {
+      'mentions' : {
+        "title" : "Total Mentions",
+        "views" : "2.447 K",
+        "different" : "-36.5%",
+        "prev" : "5.33K"
+      },
+      'distinct_users' : {
+        "title" : "Total Distinct Users",
+        "views" : "2.567 K",
+        "different" : "-36.5%",
+        "prev" : "5.33K"
+      },
+      'engagement' : {
+        "title" : "Total Engagement",
+        "views" : "245.447 K",
+        "different" : "-36.5%",
+        "prev" : "5.33K"
+      }
+  }
+     
+  ];
+  res.end(JSON.stringify(arr));
+});
+
 
 
 
