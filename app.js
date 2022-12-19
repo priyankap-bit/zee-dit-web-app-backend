@@ -74,18 +74,16 @@ app.get("/ottAdApi", (req, res) => {
   res.end("3245.12 M");
 });
 
-
-
-// dayWiseApi APIs
-app.get("/dayWiseApi", (req, res) => {
+app.get("/executiveupdateapi", (req, res) => {
   const arr = [
     {
-      "yesterday" : "655.24",
-      "today" : "163.87"
+      "updated_on" : "19-12-2022",
+      "expected_update" : "20-12-2022"
     }
   ];
   res.end(JSON.stringify(arr));
 });
+
 
 
 app.get("/ottGraphApi", (req, res) => {
