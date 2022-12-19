@@ -39,7 +39,15 @@ app.get("/adApi", (req, res) => {
 
 // Second Page APIs
 app.get("/linearReachApi", (req, res) => {
-  res.end("110.36M");
+  const arr = [
+    {
+      "title" : "Reach",
+      "views" : "35.44 M",
+      "different" : "-36.5%",
+      "prev" : "5.33K"
+    }
+  ];
+  res.end(JSON.stringify(arr));
 });
 
 app.get("/linearWatchTimeApi", (req, res) => {
@@ -47,7 +55,15 @@ app.get("/linearWatchTimeApi", (req, res) => {
 });
 
 app.get("/ottViewersApi", (req, res) => {
-  res.end("65.22 M");
+  const arr = [
+    {
+      "title" : "Viewers",
+      "views" : "56.446 M",
+      "different" : "-36.5%",
+      "prev" : "2.33K"
+    }
+  ];
+  res.end(JSON.stringify(arr));
 });
 
 app.get("/ottWatchTimeApi", (req, res) => {
