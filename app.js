@@ -4,6 +4,7 @@ const port = 5000;
 var mysql = require("mysql");
 const reader = require("xlsx");
 const cors = require("cors");
+const { json } = require("express");
 app.use(cors());
 
 // First Page APIs
@@ -36,6 +37,23 @@ app.get("/adApi", (req, res) => {
   ];
   res.end(JSON.stringify(arr));
 });
+//hello
+app.get("/update-next-update", (req, res) => {
+  const arr = [
+    {
+      update: {
+        time: '21:43:15',
+        date: '13-jan-2023'
+      },
+      nextUpdate: {
+        time: '21:57:55',
+        date: '13-jan-2023'
+      }
+      
+    }
+  ];
+  res.send(JSON.stringify(arr));
+})
 
 // Second Page APIs
 app.get("/linearReachApi", (req, res) => {
@@ -95,7 +113,6 @@ app.get("/executiveupdateapi", (req, res) => {
   ];
   res.end(JSON.stringify(arr));
 });
-
 
 // Third page APIs
 app.get("/sociallisteningapi", (req, res) => {
