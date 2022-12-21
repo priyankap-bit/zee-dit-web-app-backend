@@ -653,6 +653,13 @@ app.get("/sociallisteningapi", (req, res) => {
             { rating: "Consideration(Zee)", percent: "43" },
             { rating: "Favorite (Player)", percent: "20" },
           ]
+        },
+        'qualitative_input':{
+          "data":[
+            { rating: "Property Feedback", percent: "50" },
+            { rating: "Player Likability", percent: "75" },
+            { rating: "Willingness to Continue", percent: "43" },
+          ]
         }
       }
 
