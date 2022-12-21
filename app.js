@@ -140,7 +140,7 @@ app.get("/sociallisteningapi", (req, res) => {
       },
       'chart_data':{
         'donut_chart':{
-          "data": "{a: 3, b: 25, c: 30}"
+          "data": {a: 3, b: 25, c: 30}
         },
         'words_cloud':{
           "data": [
