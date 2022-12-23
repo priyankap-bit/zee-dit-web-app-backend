@@ -104,6 +104,46 @@ app.get("/ottWatchTimeApi", (req, res) => {
   res.end(JSON.stringify(arr));
 });
 
+// Second Page Graph APIs
+app.get("/linearReachBarGraphApi", (req, res) => {
+
+  // Reading our test file
+  const file = reader.readFile("GroupBarChart.csv");
+
+  let data = [];
+  const sheets = file.SheetNames;
+
+  for (let i = 0; i < sheets.length; i++) {
+    const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+    temp.forEach((res) => {
+      data.push(res);
+    });
+  }
+
+  res.end(JSON.stringify(data));
+});
+
+app.get("/linearWatchTimeLineGraphApi", (req, res) => {
+
+  const data = [
+    {
+      "01:00": "20",
+      "02:00": "40",
+      "03:00":"50",
+      "04:00":"55",
+      "05:00":"44",
+      "06:00":"17",
+      "07:00":"25",
+    }
+  ];
+  res.end(JSON.stringify(data));
+
+
+});
+
+
+
+
 app.get("/executiveupdateapi", (req, res) => {
   const arr = [
     {
@@ -662,9 +702,19 @@ app.get("/sociallisteningapi", (req, res) => {
           ]
         }
       }
-
   }
      
+  ];
+  res.end(JSON.stringify(arr));
+});
+
+
+app.get("/executiveupdateapi", (req, res) => {
+  const arr = [
+    {
+      "updated_on" : "19-12-2022",
+      "expected_update" : "20-12-2022"
+    }
   ];
   res.end(JSON.stringify(arr));
 });
