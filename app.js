@@ -7,6 +7,9 @@ const cors = require("cors");
 const { json } = require("express");
 app.use(cors());
 
+
+
+
 // First Page APIs
 app.get("/viewersApi", (req, res) => {
   const arr = [
@@ -120,7 +123,12 @@ app.get("/linearReachBarGraphApi", (req, res) => {
     });
   }
 
-  res.end(JSON.stringify(data));
+
+res.end(`group,match_1,match_2
+20-12-2022,12,1
+21-12-2022,6,6
+22-12-2022,11,28
+23-12-2022,19,6`);
 });
 
 app.get("/linearWatchTimeLineGraphApi", (req, res) => {
