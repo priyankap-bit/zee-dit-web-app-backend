@@ -11,8 +11,8 @@ app.use(cors());
 app.get("/viewersApi", (req, res) => {
   const arr = [
     {
-      "yesterday" : "355.4 M",
-      "today" : "563.87 M"
+      "yesterday": "355.4 M",
+      "today": "563.87 M"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -21,8 +21,8 @@ app.get("/viewersApi", (req, res) => {
 app.get("/watchTimeApi", (req, res) => {
   const arr = [
     {
-      "yesterday" : "355.4 Min",
-      "today" : "263.67 Min"
+      "yesterday": "355.4 Min",
+      "today": "263.67 Min"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -31,8 +31,8 @@ app.get("/watchTimeApi", (req, res) => {
 app.get("/adApi", (req, res) => {
   const arr = [
     {
-      "yesterday" : "305.44 M",
-      "today" : "260.39 M"
+      "yesterday": "305.44 M",
+      "today": "260.39 M"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -49,7 +49,7 @@ app.get("/update-next-update", (req, res) => {
         time: '21:57:55',
         date: '13-jan-2023'
       }
-      
+
     }
   ];
   res.send(JSON.stringify(arr));
@@ -59,10 +59,10 @@ app.get("/update-next-update", (req, res) => {
 app.get("/linearReachApi", (req, res) => {
   const arr = [
     {
-      "title" : "Reach",
-      "views" : "35.44 M",
-      "different" : "-36.5%",
-      "prev" : "5.33K"
+      "title": "Reach",
+      "views": "35.44 M",
+      "different": "-36.5%",
+      "prev": "5.33K"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -71,10 +71,10 @@ app.get("/linearReachApi", (req, res) => {
 app.get("/linearWatchTimeApi", (req, res) => {
   const arr = [
     {
-      "title" : "Watch Time",
-      "time" : "155.23 Min",
-      "different" : "-36.5%",
-      "prev" : "5.33K"
+      "title": "Watch Time",
+      "time": "155.23 Min",
+      "different": "-36.5%",
+      "prev": "5.33K"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -83,10 +83,10 @@ app.get("/linearWatchTimeApi", (req, res) => {
 app.get("/ottViewersApi", (req, res) => {
   const arr = [
     {
-      "title" : "Viewers",
-      "views" : "56.446 M",
-      "different" : "-36.5%",
-      "prev" : "2.33K"
+      "title": "Viewers",
+      "views": "56.446 M",
+      "different": "-36.5%",
+      "prev": "2.33K"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -95,10 +95,10 @@ app.get("/ottViewersApi", (req, res) => {
 app.get("/ottWatchTimeApi", (req, res) => {
   const arr = [
     {
-      "title" : "Watch Time",
-      "time" : "254.23 Min",
-      "different" : "-36.5%",
-      "prev" : "5.33K"
+      "title": "Watch Time",
+      "time": "254.23 Min",
+      "different": "-36.5%",
+      "prev": "5.33K"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -107,8 +107,8 @@ app.get("/ottWatchTimeApi", (req, res) => {
 app.get("/executiveupdateapi", (req, res) => {
   const arr = [
     {
-      "updated_on" : "19-12-2022",
-      "expected_update" : "20-12-2022"
+      "updated_on": "19-12-2022",
+      "expected_update": "20-12-2022"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -118,31 +118,31 @@ app.get("/executiveupdateapi", (req, res) => {
 app.get("/sociallisteningapi", (req, res) => {
   const arr = [
     {
-      'total_numbers':{
-        'mentions' : {
-          "title" : "Total Mentions",
-          "views" : "2.447 K",
-          "different" : "-36.5%",
-          "prev" : "5.33K"
+      'total_numbers': {
+        'mentions': {
+          "title": "Total Mentions",
+          "views": "2.447 K",
+          "different": "-36.5%",
+          "prev": "5.33K"
         },
-        'distinct_users' : {
-          "title" : "Total Distinct Users",
-          "views" : "2.567 K",
-          "different" : "-36.5%",
-          "prev" : "5.33K"
+        'distinct_users': {
+          "title": "Total Distinct Users",
+          "views": "2.567 K",
+          "different": "-36.5%",
+          "prev": "5.33K"
         },
-        'engagement' : {
-          "title" : "Total Engagement",
-          "views" : "245.447 K",
-          "different" : "-36.5%",
-          "prev" : "5.33K"
+        'engagement': {
+          "title": "Total Engagement",
+          "views": "245.447 K",
+          "different": "-36.5%",
+          "prev": "5.33K"
         }
       },
-      'chart_data':{
-        'donut_chart':{
-          "data": {a: 3, b: 25, c: 30}
+      'chart_data': {
+        'donut_chart': {
+          "data": { a: 3, b: 25, c: 30 }
         },
-        'words_cloud':{
+        'words_cloud': {
           "data": [
             {
               text: "told",
@@ -646,16 +646,16 @@ app.get("/sociallisteningapi", (req, res) => {
             },
           ]
         },
-        'consumer_track':{
-          "data":[
+        'consumer_track': {
+          "data": [
             { rating: "Awareness", percent: "75" },
             { rating: "Viewability", percent: "50" },
             { rating: "Consideration(Zee)", percent: "43" },
             { rating: "Favorite (Player)", percent: "20" },
           ]
         },
-        'qualitative_input':{
-          "data":[
+        'qualitative_input': {
+          "data": [
             { rating: "Property Feedback", percent: "50" },
             { rating: "Player Likability", percent: "75" },
             { rating: "Willingness to Continue", percent: "43" },
@@ -663,8 +663,8 @@ app.get("/sociallisteningapi", (req, res) => {
         }
       }
 
-  }
-     
+    }
+
   ];
   res.end(JSON.stringify(arr));
 });
