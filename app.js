@@ -5,8 +5,80 @@ var mysql = require("mysql");
 const reader = require("xlsx");
 const cors = require("cors");
 const { json } = require("express");
+var request = require('request')
+const vision = require('@google-cloud/vision');
+const {GoogleAuth, grpc} = require('google-gax');
+
+
 app.use(cors());
 
+
+// async function quickstart(
+//   project = 'My First Project' // Project to list connections for.
+// ) {
+//   // [START bigqueryconnection_quickstart]
+//   // Imports the Google Cloud client library
+//   const {
+//     ConnectionServiceClient,
+//   } = require('@google-cloud/bigquery-connection');
+
+//   // Creates a client
+//   const client = new ConnectionServiceClient();
+
+//   // project = 'my-project' // Project to list connections for.
+
+//   const parent = `projects/${project}/locations/US`;
+
+//   async function listConnections() {
+//     const [connections] = await client.listConnections({
+//       parent: parent,
+//     });
+
+//     console.info(`found ${connections.length} connections:`);
+//     console.info(connections);
+//   }
+//   const listConnectionsResponse = listConnections();
+//   // [END bigqueryconnection_quickstart]
+//   return listConnectionsResponse;
+// }
+
+// const args = process.argv.slice(2);
+// quickstart(...args).catch(err => {
+//   console.error(err);
+//   process.exitCode = 1;
+// });
+
+
+app.get("/api", (req, res) => {
+
+  
+
+const apiKey = 'd0a319eaadb6292dcbbd718f19eed68509ee45a3';
+
+function getApiKeyCredentials() {
+  const sslCreds = grpc.credentials.createSsl();
+  const googleAuth = new GoogleAuth();
+  const authClient = googleAuth.fromAPIKey(apiKey);
+  const credentials = grpc.credentials.combineChannelCredentials(
+    sslCreds,
+    grpc.credentials.createFromGoogleCredential(authClient)
+  );
+  return credentials;
+}
+
+
+async function main(fileName) {
+  const sslCreds = getApiKeyCredentials();
+  const client = new vision.ImageAnnotatorClient({sslCreds});
+  const [result] = await client.faceDetection(fileName); 
+  const faces = result.faceAnnotations;
+
+  //your custom code 
+
+}
+
+      
+});
 
 
 
