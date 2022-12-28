@@ -13,6 +13,7 @@ const {GoogleAuth, grpc} = require('google-gax');
 app.use(cors());
 
 
+<<<<<<< Updated upstream
 // async function quickstart(
 //   project = 'My First Project' // Project to list connections for.
 // ) {
@@ -82,6 +83,8 @@ async function main(fileName) {
 
 
 
+=======
+>>>>>>> Stashed changes
 // First Page APIs
 app.get("/viewersApi", (req, res) => {
   const arr = [

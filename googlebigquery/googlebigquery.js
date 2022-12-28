@@ -18,7 +18,7 @@ const main = () => {
             AND word_count >= @min_word_count
             ORDER BY word_count DESC`;
 
-        const options = {
+            const options = {
             query: sqlQuery,
             // Location must match that of the dataset(s) referenced in the query.
             location: 'US',
