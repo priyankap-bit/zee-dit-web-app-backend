@@ -5,92 +5,14 @@ var mysql = require("mysql");
 const reader = require("xlsx");
 const cors = require("cors");
 const { json } = require("express");
-var request = require('request')
-const vision = require('@google-cloud/vision');
-const {GoogleAuth, grpc} = require('google-gax');
-
-
 app.use(cors());
 
-
-<<<<<<< Updated upstream
-// async function quickstart(
-//   project = 'My First Project' // Project to list connections for.
-// ) {
-//   // [START bigqueryconnection_quickstart]
-//   // Imports the Google Cloud client library
-//   const {
-//     ConnectionServiceClient,
-//   } = require('@google-cloud/bigquery-connection');
-
-//   // Creates a client
-//   const client = new ConnectionServiceClient();
-
-//   // project = 'my-project' // Project to list connections for.
-
-//   const parent = `projects/${project}/locations/US`;
-
-//   async function listConnections() {
-//     const [connections] = await client.listConnections({
-//       parent: parent,
-//     });
-
-//     console.info(`found ${connections.length} connections:`);
-//     console.info(connections);
-//   }
-//   const listConnectionsResponse = listConnections();
-//   // [END bigqueryconnection_quickstart]
-//   return listConnectionsResponse;
-// }
-
-// const args = process.argv.slice(2);
-// quickstart(...args).catch(err => {
-//   console.error(err);
-//   process.exitCode = 1;
-// });
-
-
-app.get("/api", (req, res) => {
-
-  
-
-const apiKey = 'd0a319eaadb6292dcbbd718f19eed68509ee45a3';
-
-function getApiKeyCredentials() {
-  const sslCreds = grpc.credentials.createSsl();
-  const googleAuth = new GoogleAuth();
-  const authClient = googleAuth.fromAPIKey(apiKey);
-  const credentials = grpc.credentials.combineChannelCredentials(
-    sslCreds,
-    grpc.credentials.createFromGoogleCredential(authClient)
-  );
-  return credentials;
-}
-
-
-async function main(fileName) {
-  const sslCreds = getApiKeyCredentials();
-  const client = new vision.ImageAnnotatorClient({sslCreds});
-  const [result] = await client.faceDetection(fileName); 
-  const faces = result.faceAnnotations;
-
-  //your custom code 
-
-}
-
-      
-});
-
-
-
-=======
->>>>>>> Stashed changes
 // First Page APIs
 app.get("/viewersApi", (req, res) => {
   const arr = [
     {
-      "yesterday" : "355.4 M",
-      "today" : "563.87 M"
+      "yesterday": "355.4 M",
+      "today": "563.87 M"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -99,8 +21,8 @@ app.get("/viewersApi", (req, res) => {
 app.get("/watchTimeApi", (req, res) => {
   const arr = [
     {
-      "yesterday" : "355.4 Min",
-      "today" : "263.67 Min"
+      "yesterday": "355.4 Min",
+      "today": "263.67 Min"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -109,8 +31,8 @@ app.get("/watchTimeApi", (req, res) => {
 app.get("/adApi", (req, res) => {
   const arr = [
     {
-      "yesterday" : "305.44 M",
-      "today" : "260.39 M"
+      "yesterday": "305.44 M",
+      "today": "260.39 M"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -127,7 +49,7 @@ app.get("/update-next-update", (req, res) => {
         time: '21:57:55',
         date: '13-jan-2023'
       }
-      
+
     }
   ];
   res.send(JSON.stringify(arr));
@@ -137,10 +59,10 @@ app.get("/update-next-update", (req, res) => {
 app.get("/linearReachApi", (req, res) => {
   const arr = [
     {
-      "title" : "Reach",
-      "views" : "35.44 M",
-      "different" : "-36.5%",
-      "prev" : "5.33K"
+      "title": "Reach",
+      "views": "35.44 M",
+      "different": "-36.5%",
+      "prev": "5.33K"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -149,10 +71,10 @@ app.get("/linearReachApi", (req, res) => {
 app.get("/linearWatchTimeApi", (req, res) => {
   const arr = [
     {
-      "title" : "Watch Time",
-      "time" : "155.23 Min",
-      "different" : "-36.5%",
-      "prev" : "5.33K"
+      "title": "Watch Time",
+      "time": "155.23 Min",
+      "different": "-36.5%",
+      "prev": "5.33K"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -161,10 +83,10 @@ app.get("/linearWatchTimeApi", (req, res) => {
 app.get("/ottViewersApi", (req, res) => {
   const arr = [
     {
-      "title" : "Viewers",
-      "views" : "56.446 M",
-      "different" : "-36.5%",
-      "prev" : "2.33K"
+      "title": "Viewers",
+      "views": "56.446 M",
+      "different": "-36.5%",
+      "prev": "2.33K"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -173,65 +95,20 @@ app.get("/ottViewersApi", (req, res) => {
 app.get("/ottWatchTimeApi", (req, res) => {
   const arr = [
     {
-      "title" : "Watch Time",
-      "time" : "254.23 Min",
-      "different" : "-36.5%",
-      "prev" : "5.33K"
+      "title": "Watch Time",
+      "time": "254.23 Min",
+      "different": "-36.5%",
+      "prev": "5.33K"
     }
   ];
   res.end(JSON.stringify(arr));
 });
 
-// Second Page Graph APIs
-app.get("/linearReachBarGraphApi", (req, res) => {
-
-  // Reading our test file
-  const file = reader.readFile("GroupBarChart.csv");
-
-  let data = [];
-  const sheets = file.SheetNames;
-
-  for (let i = 0; i < sheets.length; i++) {
-    const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
-    temp.forEach((res) => {
-      data.push(res);
-    });
-  }
-
-
-res.end(`group,match_1,match_2
-20-12-2022,12,1
-21-12-2022,6,6
-22-12-2022,11,28
-23-12-2022,19,6`);
-});
-
-app.get("/linearWatchTimeLineGraphApi", (req, res) => {
-
-  const data = [
-    {
-      "01:00": "20",
-      "02:00": "40",
-      "03:00":"50",
-      "04:00":"55",
-      "05:00":"44",
-      "06:00":"17",
-      "07:00":"25",
-    }
-  ];
-  res.end(JSON.stringify(data));
-
-
-});
-
-
-
-
 app.get("/executiveupdateapi", (req, res) => {
   const arr = [
     {
-      "updated_on" : "19-12-2022",
-      "expected_update" : "20-12-2022"
+      "updated_on": "19-12-2022",
+      "expected_update": "20-12-2022"
     }
   ];
   res.end(JSON.stringify(arr));
@@ -241,31 +118,31 @@ app.get("/executiveupdateapi", (req, res) => {
 app.get("/sociallisteningapi", (req, res) => {
   const arr = [
     {
-      'total_numbers':{
-        'mentions' : {
-          "title" : "Total Mentions",
-          "views" : "2.447 K",
-          "different" : "-36.5%",
-          "prev" : "5.33K"
+      'total_numbers': {
+        'mentions': {
+          "title": "Total Mentions",
+          "views": "2.447 K",
+          "different": "-36.5%",
+          "prev": "5.33K"
         },
-        'distinct_users' : {
-          "title" : "Total Distinct Users",
-          "views" : "2.567 K",
-          "different" : "-36.5%",
-          "prev" : "5.33K"
+        'distinct_users': {
+          "title": "Total Distinct Users",
+          "views": "2.567 K",
+          "different": "-36.5%",
+          "prev": "5.33K"
         },
-        'engagement' : {
-          "title" : "Total Engagement",
-          "views" : "245.447 K",
-          "different" : "-36.5%",
-          "prev" : "5.33K"
+        'engagement': {
+          "title": "Total Engagement",
+          "views": "245.447 K",
+          "different": "-36.5%",
+          "prev": "5.33K"
         }
       },
-      'chart_data':{
-        'donut_chart':{
-          "data": {a: 3, b: 25, c: 30}
+      'chart_data': {
+        'donut_chart': {
+          "data": { a: 3, b: 25, c: 30 }
         },
-        'words_cloud':{
+        'words_cloud': {
           "data": [
             {
               text: "told",
@@ -769,35 +646,25 @@ app.get("/sociallisteningapi", (req, res) => {
             },
           ]
         },
-        'consumer_track':{
-          "data":[
+        'consumer_track': {
+          "data": [
             { rating: "Awareness", percent: "75" },
             { rating: "Viewability", percent: "50" },
             { rating: "Consideration(Zee)", percent: "43" },
             { rating: "Favorite (Player)", percent: "20" },
           ]
         },
-        'qualitative_input':{
-          "data":[
+        'qualitative_input': {
+          "data": [
             { rating: "Property Feedback", percent: "50" },
             { rating: "Player Likability", percent: "75" },
             { rating: "Willingness to Continue", percent: "43" },
           ]
         }
       }
-  }
-     
-  ];
-  res.end(JSON.stringify(arr));
-});
 
-
-app.get("/executiveupdateapi", (req, res) => {
-  const arr = [
-    {
-      "updated_on" : "19-12-2022",
-      "expected_update" : "20-12-2022"
     }
+
   ];
   res.end(JSON.stringify(arr));
 });
