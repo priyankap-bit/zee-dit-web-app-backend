@@ -5,17 +5,44 @@ var mysql = require("mysql");
 const reader = require("xlsx");
 const cors = require("cors");
 const { json } = require("express");
+const moment = require("moment");
 app.use(cors());
 
 // First Page APIs
 app.get("/viewersApi", (req, res) => {
-  const arr = [
-    {
-      "yesterday": "355.4 M",
-      "today": "563.87 M"
+  const TodayDate = moment().format("MM-DD-YYYY");
+  
+  console.log(str2.concat(', ', str1));
+
+  
+  // Reading file
+  const file = reader.readFile("landing.csv");
+
+  let data = [];
+
+  const sheets = file.SheetNames;
+
+  for (let i = 0; i < sheets.length; i++) {
+    const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+    temp.forEach((res) => {
+      data.push(res);
+    });
+  }
+
+
+  var scoreHome = 0;
+  data.forEach((element) => {
+    console.log('date', TodayDate, element.Date)
+    if(TodayDate == element.Date){
+      scoreHome = scoreHome + element.Watchtime;
     }
-  ];
-  res.end(JSON.stringify(arr));
+
+  });
+  var l = JSON.stringify(scoreHome);
+  console.log("sum issss:", scoreHome);
+  res.end(JSON.stringify(scoreHome));
+ 
+
 });
 
 app.get("/watchTimeApi", (req, res) => {
@@ -698,7 +725,7 @@ app.get("/ottGraphApi", (req, res) => {
 
 app.get("/csvApi", (req, res) => {
   // Reading our test file
-  const file = reader.readFile("test.csv");
+  const file = reader.readFile("landing.csv");
 
   let data = [];
 
@@ -714,7 +741,7 @@ app.get("/csvApi", (req, res) => {
   var scoreHome = 0;
   data.forEach((element) => {
     // console.log(element.score);
-    scoreHome = scoreHome + element.score;
+    scoreHome = scoreHome + element.Watchtime;
   });
   var l = JSON.stringify(scoreHome);
   console.log("sum issss:", scoreHome);
