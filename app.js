@@ -8,16 +8,16 @@ const { json } = require("express");
 const moment = require("moment");
 app.use(cors());
 
-// First Page APIs
-app.get("/viewersApi", (req, res) => {
-  const TodayDate = moment().format("MM-DD-YYYY");
-  
-  console.log(str2.concat(', ', str1));
+// ----------today and yessteerday date ----------
+var today = moment().format("YYYY-MM-DD");
+var d = new Date();
+d.setDate(d.getDate() - 1);
+var yesterday =
+  d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
 
-  
-  // Reading file
+// ------------csvFile data fetch ------------
+const getDataOfLanding1 = () => {
   const file = reader.readFile("landing.csv");
-
   let data = [];
 
   const sheets = file.SheetNames;
@@ -28,69 +28,146 @@ app.get("/viewersApi", (req, res) => {
       data.push(res);
     });
   }
+  return data;
+};
 
+const getDataOfLanding2 = () => {
+  const file = reader.readFile("landing2.csv");
+  let data = [];
 
-  var scoreHome = 0;
+  const sheets = file.SheetNames;
+
+  for (let i = 0; i < sheets.length; i++) {
+    const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+    temp.forEach((res) => {
+      data.push(res);
+    });
+  }
+  return data;
+}
+
+// First Page APIs
+app.get("/viewersApi", (req, res) => {
+  let data = getDataOfLanding1();
+
+  let todayViewers = 0;
+  let yesterdayViewers = 0;
   data.forEach((element) => {
-    console.log('date', TodayDate, element.Date)
-    if(TodayDate == element.Date){
-      scoreHome = scoreHome + element.Watchtime;
+    let d = new Date(element.Date);
+    let elementDate =
+      d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
+
+    if (today === elementDate) {
+      todayViewers += element.Viewers;
     }
-
+    if (yesterday === elementDate) {
+      yesterdayViewers += element.Viewers;
+    }
   });
-  var l = JSON.stringify(scoreHome);
-  console.log("sum issss:", scoreHome);
-  res.end(JSON.stringify(scoreHome));
- 
 
+  if (todayViewers > 0 && yesterdayViewers > 0) {
+  
+    const arr = [
+      {
+        yesterday: todayViewers,
+        today: yesterdayViewers,
+      },
+    ];
+    res.end(JSON.stringify(arr));
+  }
 });
 
 app.get("/watchTimeApi", (req, res) => {
-  const arr = [
-    {
-      "yesterday": "355.4 Min",
-      "today": "263.67 Min"
+
+  let data = getDataOfLanding1();
+
+  let todayWatchtime = 0;
+  let yesterdayWatchtime = 0;
+  data.forEach((element) => {
+    let d = new Date(element.Date);
+    let elementDate =
+      d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
+
+    if (today === elementDate) {
+      todayWatchtime += element.Watchtime;
     }
-  ];
-  res.end(JSON.stringify(arr));
+    if (yesterday === elementDate) {
+      yesterdayWatchtime += element.Watchtime;
+    }
+  });
+
+  if (todayWatchtime > 0 && yesterdayWatchtime > 0) {
+   
+    const arr = [
+      {
+        yesterday: todayWatchtime,
+        today: yesterdayWatchtime,
+      },
+    ];
+    res.end(JSON.stringify(arr));
+  }
+
 });
 
 app.get("/adApi", (req, res) => {
-  const arr = [
-    {
-      "yesterday": "305.44 M",
-      "today": "260.39 M"
+
+  let data = getDataOfLanding2();
+  
+  
+  let todayAdImpression = 0;
+  let yesterdayAdImpression = 0;
+
+  data.forEach((element) => {
+    let d = new Date(element.Date);
+    let elementDate =
+      d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
+      // console.log(elementDate);
+    if (today === elementDate) {
+      todayAdImpression += element.AdImpression;
     }
-  ];
-  res.end(JSON.stringify(arr));
+    if (yesterday === elementDate) {
+      yesterdayAdImpression += element.AdImpression;
+    }
+  });
+  if(todayAdImpression > 0) console.log(todayAdImpression);
+  // if (todayAdImpression > 0 && yesterdayAdImpression > 0) {
+   
+  //   const arr = [
+  //     {
+  //       yesterday: todayAdImpression,
+  //       today: yesterdayAdImpression,
+  //     },
+  //   ];
+  //   res.end(JSON.stringify(arr));
+  // }
+  res.end('working');
 });
 //hello
 app.get("/update-next-update", (req, res) => {
   const arr = [
     {
       update: {
-        time: '21:43:15',
-        date: '13-jan-2023'
+        time: "21:43:15",
+        date: "13-jan-2023",
       },
       nextUpdate: {
-        time: '21:57:55',
-        date: '13-jan-2023'
-      }
-
-    }
+        time: "21:57:55",
+        date: "13-jan-2023",
+      },
+    },
   ];
   res.send(JSON.stringify(arr));
-})
+});
 
 // Second Page APIs
 app.get("/linearReachApi", (req, res) => {
   const arr = [
     {
-      "title": "Reach",
-      "views": "35.44 M",
-      "different": "-36.5%",
-      "prev": "5.33K"
-    }
+      title: "Reach",
+      views: "35.44 M",
+      different: "-36.5%",
+      prev: "5.33K",
+    },
   ];
   res.end(JSON.stringify(arr));
 });
@@ -98,11 +175,11 @@ app.get("/linearReachApi", (req, res) => {
 app.get("/linearWatchTimeApi", (req, res) => {
   const arr = [
     {
-      "title": "Watch Time",
-      "time": "155.23 Min",
-      "different": "-36.5%",
-      "prev": "5.33K"
-    }
+      title: "Watch Time",
+      time: "155.23 Min",
+      different: "-36.5%",
+      prev: "5.33K",
+    },
   ];
   res.end(JSON.stringify(arr));
 });
@@ -110,11 +187,11 @@ app.get("/linearWatchTimeApi", (req, res) => {
 app.get("/ottViewersApi", (req, res) => {
   const arr = [
     {
-      "title": "Viewers",
-      "views": "56.446 M",
-      "different": "-36.5%",
-      "prev": "2.33K"
-    }
+      title: "Viewers",
+      views: "56.446 M",
+      different: "-36.5%",
+      prev: "2.33K",
+    },
   ];
   res.end(JSON.stringify(arr));
 });
@@ -122,11 +199,11 @@ app.get("/ottViewersApi", (req, res) => {
 app.get("/ottWatchTimeApi", (req, res) => {
   const arr = [
     {
-      "title": "Watch Time",
-      "time": "254.23 Min",
-      "different": "-36.5%",
-      "prev": "5.33K"
-    }
+      title: "Watch Time",
+      time: "254.23 Min",
+      different: "-36.5%",
+      prev: "5.33K",
+    },
   ];
   res.end(JSON.stringify(arr));
 });
@@ -134,9 +211,9 @@ app.get("/ottWatchTimeApi", (req, res) => {
 app.get("/executiveupdateapi", (req, res) => {
   const arr = [
     {
-      "updated_on": "19-12-2022",
-      "expected_update": "20-12-2022"
-    }
+      updated_on: "19-12-2022",
+      expected_update: "20-12-2022",
+    },
   ];
   res.end(JSON.stringify(arr));
 });
@@ -145,32 +222,32 @@ app.get("/executiveupdateapi", (req, res) => {
 app.get("/sociallisteningapi", (req, res) => {
   const arr = [
     {
-      'total_numbers': {
-        'mentions': {
-          "title": "Total Mentions",
-          "views": "2.447 K",
-          "different": "-36.5%",
-          "prev": "5.33K"
+      total_numbers: {
+        mentions: {
+          title: "Total Mentions",
+          views: "2.447 K",
+          different: "-36.5%",
+          prev: "5.33K",
         },
-        'distinct_users': {
-          "title": "Total Distinct Users",
-          "views": "2.567 K",
-          "different": "-36.5%",
-          "prev": "5.33K"
+        distinct_users: {
+          title: "Total Distinct Users",
+          views: "2.567 K",
+          different: "-36.5%",
+          prev: "5.33K",
         },
-        'engagement': {
-          "title": "Total Engagement",
-          "views": "245.447 K",
-          "different": "-36.5%",
-          "prev": "5.33K"
-        }
+        engagement: {
+          title: "Total Engagement",
+          views: "245.447 K",
+          different: "-36.5%",
+          prev: "5.33K",
+        },
       },
-      'chart_data': {
-        'donut_chart': {
-          "data": { a: 3, b: 25, c: 30 }
+      chart_data: {
+        donut_chart: {
+          data: { a: 3, b: 25, c: 30 },
         },
-        'words_cloud': {
-          "data": [
+        words_cloud: {
+          data: [
             {
               text: "told",
               value: 64,
@@ -671,33 +748,28 @@ app.get("/sociallisteningapi", (req, res) => {
               text: "refund",
               value: 10,
             },
-          ]
+          ],
         },
-        'consumer_track': {
-          "data": [
+        consumer_track: {
+          data: [
             { rating: "Awareness", percent: "75" },
             { rating: "Viewability", percent: "50" },
             { rating: "Consideration(Zee)", percent: "43" },
             { rating: "Favorite (Player)", percent: "20" },
-          ]
+          ],
         },
-        'qualitative_input': {
-          "data": [
+        qualitative_input: {
+          data: [
             { rating: "Property Feedback", percent: "50" },
             { rating: "Player Likability", percent: "75" },
             { rating: "Willingness to Continue", percent: "43" },
-          ]
-        }
-      }
-
-    }
-
+          ],
+        },
+      },
+    },
   ];
   res.end(JSON.stringify(arr));
 });
-
-
-
 
 app.get("/ottGraphApi", (req, res) => {
   // Reading our test file
@@ -715,12 +787,11 @@ app.get("/ottGraphApi", (req, res) => {
   var scoreHome = [];
   data.forEach((element) => {
     // console.log(element.score);
-    scoreHome.push(element.score)
+    scoreHome.push(element.score);
   });
   var l = JSON.stringify(scoreHome);
   console.log("Array is here:", scoreHome);
   res.end(JSON.stringify(scoreHome));
-
 });
 
 app.get("/csvApi", (req, res) => {
