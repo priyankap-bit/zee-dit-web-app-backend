@@ -16,8 +16,8 @@ var yesterday =
   d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
 
 // ------------csvFile data fetch ------------
-const getDataOfLanding1 = () => {
-  const file = reader.readFile("landing.csv");
+const getDataOfMinuteByMinuteTrend = () => {
+  const file = reader.readFile("minuteByMinute_trend.csv");
   let data = [];
 
   const sheets = file.SheetNames;
@@ -31,8 +31,8 @@ const getDataOfLanding1 = () => {
   return data;
 };
 
-const getDataOfLanding2 = () => {
-  const file = reader.readFile("landing2.csv");
+const getDataOflandingPageTrend = () => {
+  const file = reader.readFile("landingPageTrend.csv");
   let data = [];
 
   const sheets = file.SheetNames;
@@ -44,127 +44,171 @@ const getDataOfLanding2 = () => {
     });
   }
   return data;
-}
+};
 
 // First Page APIs
 app.get("/viewersApi", (req, res) => {
-  let data = getDataOfLanding1();
+  let data = getDataOfMinuteByMinuteTrend();
 
   let todayViewers = 0;
-  let yesterdayViewers = 0;
+  let todayTime = null;
+  let date;
+  let chartData = [];
+
   data.forEach((element) => {
     let d = new Date(element.Date);
+
     let elementDate =
       d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
 
+    let elementTime =
+      d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+
     if (today === elementDate) {
+      date = element.Date;
       todayViewers += element.Viewers;
-    }
-    if (yesterday === elementDate) {
-      yesterdayViewers += element.Viewers;
+      chartData.push(element.Viewers);
+
+      if (todayTime === null) {
+        todayTime = elementTime;
+      } else if (todayTime < elementTime) {
+        todayTime = elementTime;
+      }
     }
   });
 
-  if (todayViewers > 0 && yesterdayViewers > 0) {
-  
-    const arr = [
-      {
-        yesterday: todayViewers,
-        today: yesterdayViewers,
-      },
-    ];
-    res.end(JSON.stringify(arr));
-  }
+  const arr = [
+    {
+      dateAndTime: date,
+      viewers: todayViewers,
+      lastUpdateTime: todayTime,
+      chartData: chartData,
+    },
+  ];
+
+  res.end(JSON.stringify(arr));
 });
 
 app.get("/watchTimeApi", (req, res) => {
-
-  let data = getDataOfLanding1();
+  let data = getDataOfMinuteByMinuteTrend();
 
   let todayWatchtime = 0;
-  let yesterdayWatchtime = 0;
+  let todayTime = null;
+  let date;
+  let chartData = [];
+
   data.forEach((element) => {
     let d = new Date(element.Date);
+
     let elementDate =
       d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
 
+    let elementTime =
+      d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+
+    // console.log(element.Watchtime_mins);
+
     if (today === elementDate) {
-      todayWatchtime += element.Watchtime;
-    }
-    if (yesterday === elementDate) {
-      yesterdayWatchtime += element.Watchtime;
+      todayWatchtime += element.Watchtime_mins;
+      date = element.Date;
+      chartData.push(element.Watchtime_mins);
+      if (todayTime === null) {
+        todayTime = elementTime;
+      } else if (todayTime < elementTime) {
+        todayTime = elementTime;
+      }
     }
   });
 
-  if (todayWatchtime > 0 && yesterdayWatchtime > 0) {
-   
-    const arr = [
-      {
-        yesterday: todayWatchtime,
-        today: yesterdayWatchtime,
-      },
-    ];
-    res.end(JSON.stringify(arr));
-  }
-
+  const arr = [
+    {
+      dateAndTime: date,
+      watchtime: todayWatchtime,
+      lastUpdateTime: todayTime,
+      chartData: chartData,
+    },
+  ];
+  res.end(JSON.stringify(arr));
 });
 
 app.get("/adApi", (req, res) => {
+  let data = getDataOfMinuteByMinuteTrend();
 
-  let data = getDataOfLanding2();
-  
-  
   let todayAdImpression = 0;
-  let yesterdayAdImpression = 0;
+  let todayTime = null;
+  let date;
+  let chartData = [];
 
   data.forEach((element) => {
     let d = new Date(element.Date);
+
     let elementDate =
       d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
-      // console.log(elementDate);
+
+    let elementTime =
+      d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+
     if (today === elementDate) {
-      todayAdImpression += element.AdImpression;
-    }
-    if (yesterday === elementDate) {
-      yesterdayAdImpression += element.AdImpression;
+      date = element.Date;
+      todayAdImpression += element.Ad_Impression;
+      chartData.push(element.Ad_Impression);
+      if (todayTime === null) {
+        todayTime = elementTime;
+      } else if (todayTime < elementTime) {
+        todayTime = elementTime;
+      }
     }
   });
-  if(todayAdImpression > 0) console.log(todayAdImpression);
-  // if (todayAdImpression > 0 && yesterdayAdImpression > 0) {
-   
-  //   const arr = [
-  //     {
-  //       yesterday: todayAdImpression,
-  //       today: yesterdayAdImpression,
-  //     },
-  //   ];
-  //   res.end(JSON.stringify(arr));
-  // }
-  res.end('working');
-});
-//hello
-app.get("/update-next-update", (req, res) => {
+
   const arr = [
     {
-      update: {
-        time: "21:43:15",
-        date: "13-jan-2023",
-      },
-      nextUpdate: {
-        time: "21:57:55",
-        date: "13-jan-2023",
-      },
+      dateAndTime: date,
+      adImpression: todayAdImpression,
+      lastUpdateTime: todayTime,
+      chartData: chartData,
     },
   ];
-  res.send(JSON.stringify(arr));
+
+  res.end(JSON.stringify(arr));
 });
 
+// app.get("/update-next-update", (req, res) => {
+//   const arr = [
+//     {
+//       update: {
+//         time: "21:43:15",
+//         date: "13-jan-2023",
+//       },
+//       nextUpdate: {
+//         time: "21:57:55",
+//         date: "13-jan-2023",
+//       },
+//     },
+//   ];
+//   res.send(JSON.stringify(arr));
+// });
+
 // Second Page APIs
-app.get("/linearReachApi", (req, res) => {
+app.get("/digital", (req, res) => {
+  let data = getDataOflandingPageTrend();
+
+  let digitalData = [] ;
+  let totalOfAllDegitalViewers = 0;
+  data.forEach(element, index => {
+    console.log(index);
+    if(data.Source === 'Digital'){
+      totalOfAllDegitalViewers += element.Viewers
+    }
+  })
+  // console.log(data);
   const arr = [
     {
-      title: "Reach",
-      views: "35.44 M",
+      title: "Digital",
+      viewers: {
+        totalOfAllDegitalViewers: totalOfAllDegitalViewers,
+        lastSevenDayData : 'asjh'
+      },
+      
       different: "-36.5%",
       prev: "5.33K",
     },
