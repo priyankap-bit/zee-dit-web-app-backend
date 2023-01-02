@@ -12,8 +12,10 @@ app.use(cors());
 var today = moment().format("YYYY-MM-DD");
 var d = new Date();
 d.setDate(d.getDate() - 1);
-var yesterday =
-  d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
+
+const getNumberInTwoDigit = (number) => {
+  return (number < 10 ? "0" : "") + number;
+};
 
 // ------------csvFile data fetch ------------
 const getDataOfMinuteByMinuteTrend = () => {
@@ -31,6 +33,21 @@ const getDataOfMinuteByMinuteTrend = () => {
   return data;
 };
 
+const getDataOfmatch2Landing = () => {
+  const file = reader.readFile("match2landing.csv");
+  let data = [];
+
+  const sheets = file.SheetNames;
+
+  for (let i = 0; i < sheets.length; i++) {
+    const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+    temp.forEach((res) => {
+      data.push(res);
+    });
+  }
+  return data;
+}
+
 const getDataOflandingPageTrend = () => {
   const file = reader.readFile("landingPageTrend.csv");
   let data = [];
@@ -47,7 +64,7 @@ const getDataOflandingPageTrend = () => {
 };
 
 // First Page APIs
-app.get("/viewersApi", (req, res) => {
+app.get("/match1-viewers", (req, res) => {
   let data = getDataOfMinuteByMinuteTrend();
 
   let todayViewers = 0;
@@ -59,7 +76,11 @@ app.get("/viewersApi", (req, res) => {
     let d = new Date(element.Date);
 
     let elementDate =
-      d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
+      d.getFullYear() +
+      "-" +
+      getNumberInTwoDigit(d.getMonth() + 1) +
+      "-" +
+      getNumberInTwoDigit(d.getDate());
 
     let elementTime =
       d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
@@ -89,7 +110,7 @@ app.get("/viewersApi", (req, res) => {
   res.end(JSON.stringify(arr));
 });
 
-app.get("/watchTimeApi", (req, res) => {
+app.get("/match1-watchtime", (req, res) => {
   let data = getDataOfMinuteByMinuteTrend();
 
   let todayWatchtime = 0;
@@ -101,12 +122,14 @@ app.get("/watchTimeApi", (req, res) => {
     let d = new Date(element.Date);
 
     let elementDate =
-      d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
+      d.getFullYear() +
+      "-" +
+      getNumberInTwoDigit(d.getMonth() + 1) +
+      "-" +
+      getNumberInTwoDigit(d.getDate());
 
     let elementTime =
       d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-
-    // console.log(element.Watchtime_mins);
 
     if (today === elementDate) {
       todayWatchtime += element.Watchtime_mins;
@@ -131,7 +154,7 @@ app.get("/watchTimeApi", (req, res) => {
   res.end(JSON.stringify(arr));
 });
 
-app.get("/adApi", (req, res) => {
+app.get("/match1-ad_impression", (req, res) => {
   let data = getDataOfMinuteByMinuteTrend();
 
   let todayAdImpression = 0;
@@ -143,7 +166,146 @@ app.get("/adApi", (req, res) => {
     let d = new Date(element.Date);
 
     let elementDate =
-      d.getFullYear() + "-" + Number(d.getMonth() + 1) + "-" + d.getDate();
+      d.getFullYear() +
+      "-" +
+      getNumberInTwoDigit(d.getMonth() + 1) +
+      "-" +
+      getNumberInTwoDigit(d.getDate());
+
+    let elementTime =
+      d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+
+    if (today === elementDate) {
+      date = element.Date;
+      todayAdImpression += element.Ad_Impression;
+      chartData.push(element.Ad_Impression);
+      if (todayTime === null) {
+        todayTime = elementTime;
+      } else if (todayTime < elementTime) {
+        todayTime = elementTime;
+      }
+    }
+  });
+
+  const arr = [
+    {
+      dateAndTime: date,
+      adImpression: todayAdImpression,
+      lastUpdateTime: todayTime,
+      chartData: chartData,
+    },
+  ];
+
+  res.end(JSON.stringify(arr));
+});
+
+app.get("/match2-viewers", (req, res) => {
+  let data = getDataOfmatch2Landing();
+
+  let todayViewers = 0;
+  let todayTime = null;
+  let date;
+  let chartData = [];
+
+  data.forEach((element) => {
+    let d = new Date(element.Date);
+
+    let elementDate =
+      d.getFullYear() +
+      "-" +
+      getNumberInTwoDigit(d.getMonth() + 1) +
+      "-" +
+      getNumberInTwoDigit(d.getDate());
+
+    let elementTime =
+      d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+
+    if (today === elementDate) {
+      date = element.Date;
+      todayViewers += element.Viewers;
+      chartData.push(element.Viewers);
+
+      if (todayTime === null) {
+        todayTime = elementTime;
+      } else if (todayTime < elementTime) {
+        todayTime = elementTime;
+      }
+    }
+  });
+
+  const arr = [
+    {
+      dateAndTime: date,
+      viewers: todayViewers,
+      lastUpdateTime: todayTime,
+      chartData: chartData,
+    },
+  ];
+
+  res.end(JSON.stringify(arr));
+});
+
+app.get("/match2-watchtime", (req, res) => {
+  let data = getDataOfmatch2Landing();
+  console.log(data);
+  let todayWatchtime = 0;
+  let todayTime = null;
+  let date;
+  let chartData = [];
+
+  data.forEach((element) => {
+    let d = new Date(element.Date);
+
+    let elementDate =
+      d.getFullYear() +
+      "-" +
+      getNumberInTwoDigit(d.getMonth() + 1) +
+      "-" +
+      getNumberInTwoDigit(d.getDate());
+
+    let elementTime =
+      d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+
+    if (today === elementDate) {
+      todayWatchtime += element.Watchtime_mins;
+      date = element.Date;
+      chartData.push(element.Watchtime_mins);
+      if (todayTime === null) {
+        todayTime = elementTime;
+      } else if (todayTime < elementTime) {
+        todayTime = elementTime;
+      }
+    }
+  });
+
+  const arr = [
+    {
+      dateAndTime: date,
+      watchtime: todayWatchtime,
+      lastUpdateTime: todayTime,
+      chartData: chartData,
+    },
+  ];
+  res.end(JSON.stringify(arr));
+});
+
+app.get("/match2-ad_impression", (req, res) => {
+  let data = getDataOfmatch2Landing();
+
+  let todayAdImpression = 0;
+  let todayTime = null;
+  let date;
+  let chartData = [];
+
+  data.forEach((element) => {
+    let d = new Date(element.Date);
+
+    let elementDate =
+      d.getFullYear() +
+      "-" +
+      getNumberInTwoDigit(d.getMonth() + 1) +
+      "-" +
+      getNumberInTwoDigit(d.getDate());
 
     let elementTime =
       d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
@@ -177,58 +339,58 @@ app.get("/digital", (req, res) => {
   let data = getDataOflandingPageTrend();
 
   // console.log(data);
-  let totalOfAllDegitalViewers = 0;
-  let totalOfAllDegitalWatchTime = 0;
+  let totalOfAllDegitalCumulative_Viewers = 0;
+  let totalOfAllDegitalCumulative_Watchtime = 0;
 
-  let lastSevenDayDataOfViewers = [];
-  let lastSevenDayDataOfWatchTime = [];
+  let lastSevenDayDataOfCumulative_Viewers = [];
+  let lastSevenDayDataOfCumulative_Watchtime = [];
 
-  let lastSevenDayAvgOfViewers;
-  let lastSevenDayAvgOfWatchTime;
+  let lastSevenDayAvgOfCumulative_Viewers;
+  let lastSevenDayAvgOfCumulative_Watchtime;
 
   let count = 0;
   data.forEach((element) => {
     if (element.Source === "Digital") {
       count += 1;
       if (count <= 7) {
-        lastSevenDayDataOfViewers.push(element.Viewers);
-        lastSevenDayDataOfWatchTime.push(element.Watchtime);
+        lastSevenDayDataOfCumulative_Viewers.push(element.Cumulative_Viewers);
+        lastSevenDayDataOfCumulative_Watchtime.push(element.Watchtime);
       }
 
-      totalOfAllDegitalViewers += element.Viewers;
-      totalOfAllDegitalWatchTime += element.Watchtime;
+      totalOfAllDegitalCumulative_Viewers += element.Viewers;
+      totalOfAllDegitalCumulative_Watchtime += element.Watchtime;
     }
   });
 
-  if (lastSevenDayDataOfWatchTime.length > 0) {
+  if (lastSevenDayDataOfCumulative_Watchtime.length > 0) {
     let avgCountOfWatchTime = 0;
     let avgCountOfViewers = 0;
 
-    lastSevenDayDataOfViewers.forEach((element) => {
+    lastSevenDayDataOfCumulative_Viewers.forEach((element) => {
       avgCountOfWatchTime += element;
-      lastSevenDayAvgOfViewers = avgCountOfWatchTime / 7;
+      lastSevenDayAvgOfCumulative_Viewers = avgCountOfWatchTime / 7;
     });
 
-    lastSevenDayDataOfWatchTime.forEach((element) => {
+    lastSevenDayDataOfCumulative_Watchtime.forEach((element) => {
       avgCountOfViewers += element;
-      lastSevenDayAvgOfWatchTime = avgCountOfViewers / 7;
-    })
+      lastSevenDayAvgOfCumulative_Watchtime = avgCountOfViewers / 7;
+    });
   }
 
   const arr = {
     title: "Digital",
     viewers: {
       title: "Viewers",
-      totalViewers: totalOfAllDegitalViewers,
-      lastSevenDayData: lastSevenDayDataOfViewers,
-      different: lastSevenDayAvgOfViewers,
+      totalViewers: totalOfAllDegitalCumulative_Viewers,
+      lastSevenDayData: lastSevenDayDataOfCumulative_Viewers,
+      different: lastSevenDayAvgOfCumulative_Viewers,
       prev: "5.33K",
     },
     watchTime: {
       title: "Watch Time",
-      totalWatchTime: totalOfAllDegitalWatchTime,
-      lastSevenDayData: lastSevenDayDataOfWatchTime,
-      different: lastSevenDayAvgOfWatchTime,
+      totalWatchTime: totalOfAllDegitalCumulative_Watchtime,
+      lastSevenDayData: lastSevenDayDataOfCumulative_Watchtime,
+      different: lastSevenDayAvgOfCumulative_Watchtime,
       prev: "5.33K",
     },
   };
@@ -237,26 +399,179 @@ app.get("/digital", (req, res) => {
 });
 
 app.get("/linear", (req, res) => {
-  const arr = [
-    {
-      title: "Watch Time",
-      time: "155.23 Min",
-      different: "-36.5%",
+  let data = getDataOflandingPageTrend();
+
+  let totalOfAllLinearCumulative_Viewers = 0;
+  let totalOfAllLinearCumulative_Watchtime = 0;
+
+  let lastSevenDayDataOfCumulative_Viewers = [];
+  let lastSevenDayDataOfCumulative_Watchtime = [];
+
+  let lastSevenDayAvgOfCumulative_Viewers;
+  let lastSevenDayAvgOfCumulative_Watchtime;
+
+  let count = 0;
+
+  data.forEach((element) => {
+    if (element.Source === "Linear") {
+      count += 1;
+      if (count <= 7) {
+        lastSevenDayDataOfCumulative_Viewers.push(element.Cumulative_Viewers);
+        lastSevenDayDataOfCumulative_Watchtime.push(
+          element.Cumulative_Watchtime
+        );
+      }
+
+      totalOfAllLinearCumulative_Viewers += element.Viewers;
+      totalOfAllLinearCumulative_Watchtime += element.Watchtime;
+    }
+  });
+
+  if (lastSevenDayDataOfCumulative_Watchtime.length > 0) {
+    let avgCountOfWatchTime = 0;
+    let avgCountOfViewers = 0;
+
+    lastSevenDayDataOfCumulative_Viewers.forEach((element) => {
+      avgCountOfWatchTime += element;
+      lastSevenDayAvgOfCumulative_Viewers = avgCountOfWatchTime / 7;
+    });
+
+    lastSevenDayDataOfCumulative_Watchtime.forEach((element) => {
+      avgCountOfViewers += element;
+      lastSevenDayAvgOfCumulative_Watchtime = avgCountOfViewers / 7;
+    });
+  }
+
+  const arr = {
+    title: "Linear",
+    viewers: {
+      title: "Viewers",
+      totalViewers: totalOfAllLinearCumulative_Viewers,
+      lastSevenDayData: lastSevenDayDataOfCumulative_Viewers,
+      different: lastSevenDayAvgOfCumulative_Viewers,
       prev: "5.33K",
     },
-  ];
+    watchTime: {
+      title: "Watch Time",
+      totalWatchTime: totalOfAllLinearCumulative_Watchtime,
+      lastSevenDayData: lastSevenDayDataOfCumulative_Watchtime,
+      different: lastSevenDayAvgOfCumulative_Watchtime,
+      prev: "5.33K",
+    },
+  };
+
   res.end(JSON.stringify(arr));
 });
 
-app.get("/ottViewersApi", (req, res) => {
-  const arr = [
-    {
+app.get("/combined", (req, res) => {
+  let data = getDataOflandingPageTrend();
+
+  let countOfDigital = 0;
+  let countOfLinear = 0;
+
+  let lastSevenDayDataOfLinearCumulative_Viewers = [];
+  let lastSevenDayDataOfLinearCumulative_WatchTime = [];
+  let lastSevenDayDataOfDigitalCumulative_Viewers = [];
+  let lastSevenDayDataOfDigitalCumulative_WatchTime = [];
+
+  let lastSevenDayDataOfDigitalPluseLinearCumulative_Viewers = [];
+  let lastSevenDayDataOfDigitalPluseLinearCumulative_WatchTime = [];
+
+  let totalOfAllCombinedCumulative_Viewers = 0;
+  let totalOfAllCombinedCumulative_WatchTime = 0;
+
+  let avgOfCumulative_Viewers;
+  let avgOfCumulative_WatchTime;
+
+  data.forEach((element) => {
+    if (element.Source === "Linear") {
+      countOfLinear += 1;
+      if (countOfLinear <= 7) {
+        lastSevenDayDataOfLinearCumulative_Viewers.push(
+          element.Cumulative_Viewers
+        );
+        lastSevenDayDataOfLinearCumulative_WatchTime.push(
+          element.Cumulative_Watchtime
+        );
+      }
+    }
+
+    if (element.Source === "Digital") {
+      countOfDigital += 1;
+      if (countOfDigital <= 7) {
+        lastSevenDayDataOfDigitalCumulative_Viewers.push(
+          element.Cumulative_Viewers
+        );
+        lastSevenDayDataOfDigitalCumulative_WatchTime.push(
+          element.Cumulative_Watchtime
+        );
+      }
+    }
+  });
+
+  if (
+    lastSevenDayDataOfLinearCumulative_Viewers.length > 0 &&
+    lastSevenDayDataOfLinearCumulative_WatchTime.length > 0 &&
+    lastSevenDayDataOfDigitalCumulative_Viewers.length > 0 &&
+    lastSevenDayDataOfDigitalCumulative_WatchTime.length > 0
+  ) {
+    for (
+      let i = 0;
+      i < lastSevenDayDataOfLinearCumulative_Viewers.length;
+      i++
+    ) {
+      lastSevenDayDataOfDigitalPluseLinearCumulative_Viewers[i] =
+        lastSevenDayDataOfLinearCumulative_Viewers[i] +
+        lastSevenDayDataOfDigitalCumulative_Viewers[i];
+      lastSevenDayDataOfDigitalPluseLinearCumulative_WatchTime[i] =
+        lastSevenDayDataOfLinearCumulative_WatchTime[i] +
+        lastSevenDayDataOfDigitalCumulative_WatchTime[i];
+    }
+  }
+
+  if (
+    lastSevenDayDataOfDigitalPluseLinearCumulative_Viewers.length > 0 &&
+    lastSevenDayDataOfDigitalPluseLinearCumulative_WatchTime.length > 0
+  ) {
+    for (
+      let i = 0;
+      i < lastSevenDayDataOfDigitalPluseLinearCumulative_Viewers.length;
+      i++
+    ) {
+      totalOfAllCombinedCumulative_Viewers +=
+        lastSevenDayDataOfDigitalPluseLinearCumulative_Viewers[i];
+      totalOfAllCombinedCumulative_WatchTime +=
+        lastSevenDayDataOfDigitalPluseLinearCumulative_WatchTime[i];
+    }
+  }
+
+  if (
+    totalOfAllCombinedCumulative_Viewers !== 0 &&
+    totalOfAllCombinedCumulative_WatchTime !== 0
+  ) {
+    avgOfCumulative_Viewers = totalOfAllCombinedCumulative_Viewers / 7;
+    avgOfCumulative_WatchTime = totalOfAllCombinedCumulative_WatchTime / 7;
+  }
+
+  const arr = {
+    title: "Combined",
+    viewers: {
       title: "Viewers",
-      views: "56.446 M",
-      different: "-36.5%",
-      prev: "2.33K",
+      totalViewers: totalOfAllCombinedCumulative_Viewers,
+      lastSevenDayData: lastSevenDayDataOfDigitalPluseLinearCumulative_Viewers,
+      different: avgOfCumulative_Viewers,
+      prev: "5.33K",
     },
-  ];
+    watchTime: {
+      title: "Watch Time",
+      totalWatchTime: totalOfAllCombinedCumulative_WatchTime,
+      lastSevenDayData:
+        lastSevenDayDataOfDigitalPluseLinearCumulative_WatchTime,
+      different: avgOfCumulative_WatchTime,
+      prev: "5.33K",
+    },
+  };
+
   res.end(JSON.stringify(arr));
 });
 
