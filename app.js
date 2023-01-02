@@ -172,51 +172,71 @@ app.get("/adApi", (req, res) => {
   res.end(JSON.stringify(arr));
 });
 
-// app.get("/update-next-update", (req, res) => {
-//   const arr = [
-//     {
-//       update: {
-//         time: "21:43:15",
-//         date: "13-jan-2023",
-//       },
-//       nextUpdate: {
-//         time: "21:57:55",
-//         date: "13-jan-2023",
-//       },
-//     },
-//   ];
-//   res.send(JSON.stringify(arr));
-// });
-
 // Second Page APIs
 app.get("/digital", (req, res) => {
   let data = getDataOflandingPageTrend();
 
-  let digitalData = [] ;
-  let totalOfAllDegitalViewers = 0;
-  data.forEach(element, index => {
-    console.log(index);
-    if(data.Source === 'Digital'){
-      totalOfAllDegitalViewers += element.Viewers
-    }
-  })
   // console.log(data);
-  const arr = [
-    {
-      title: "Digital",
-      viewers: {
-        totalOfAllDegitalViewers: totalOfAllDegitalViewers,
-        lastSevenDayData : 'asjh'
-      },
-      
-      different: "-36.5%",
+  let totalOfAllDegitalViewers = 0;
+  let totalOfAllDegitalWatchTime = 0;
+
+  let lastSevenDayDataOfViewers = [];
+  let lastSevenDayDataOfWatchTime = [];
+
+  let lastSevenDayAvgOfViewers;
+  let lastSevenDayAvgOfWatchTime;
+
+  let count = 0;
+  data.forEach((element) => {
+    if (element.Source === "Digital") {
+      count += 1;
+      if (count <= 7) {
+        lastSevenDayDataOfViewers.push(element.Viewers);
+        lastSevenDayDataOfWatchTime.push(element.Watchtime);
+      }
+
+      totalOfAllDegitalViewers += element.Viewers;
+      totalOfAllDegitalWatchTime += element.Watchtime;
+    }
+  });
+
+  if (lastSevenDayDataOfWatchTime.length > 0) {
+    let avgCountOfWatchTime = 0;
+    let avgCountOfViewers = 0;
+
+    lastSevenDayDataOfViewers.forEach((element) => {
+      avgCountOfWatchTime += element;
+      lastSevenDayAvgOfViewers = avgCountOfWatchTime / 7;
+    });
+
+    lastSevenDayDataOfWatchTime.forEach((element) => {
+      avgCountOfViewers += element;
+      lastSevenDayAvgOfWatchTime = avgCountOfViewers / 7;
+    })
+  }
+
+  const arr = {
+    title: "Digital",
+    viewers: {
+      title: "Viewers",
+      totalViewers: totalOfAllDegitalViewers,
+      lastSevenDayData: lastSevenDayDataOfViewers,
+      different: lastSevenDayAvgOfViewers,
       prev: "5.33K",
     },
-  ];
+    watchTime: {
+      title: "Watch Time",
+      totalWatchTime: totalOfAllDegitalWatchTime,
+      lastSevenDayData: lastSevenDayDataOfWatchTime,
+      different: lastSevenDayAvgOfWatchTime,
+      prev: "5.33K",
+    },
+  };
+
   res.end(JSON.stringify(arr));
 });
 
-app.get("/linearWatchTimeApi", (req, res) => {
+app.get("/linear", (req, res) => {
   const arr = [
     {
       title: "Watch Time",
